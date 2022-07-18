@@ -26,13 +26,14 @@ will log an error message and cause the script to error.
 
 **Example**:
 
-  
-  N.B. This example will not validate but demonstrates the template needed for
-  a configuration file.
-  
-  config_file = "./examples/config.examples.json"
-  
-  check_graphql_config(config_file)
+```python
+    # N.B. This example will not validate but demonstrates the template needed for 
+    a configuration file.
+
+        config_file = "./examples/config.examples.json"
+
+        check_graphql_config(config_file)
+```
   
 
 **Arguments**:
@@ -51,10 +52,11 @@ as a string.
 
 **Example**:
 
-  
-  template_path = "./examples/example_query.graphql"
-  
-  template_query = get_graphql_template(template_path)
+```python
+    template_path = "./examples/example_query.graphql"
+
+    template_query = get_graphql_template(template_path)
+```
   
 
 **Arguments**:
@@ -77,26 +79,27 @@ run_graphql_query _summary_
 
 **Example**:
 
-  
-  template_path = "./examples/example_query.graphql"
-  
-  template_query = get_graphql_template(template_path)
-  
-  config_file = "./examples/config.examples.json"
-  
-  check_graphql_config(config_file)
-  
-  variables = {
-- `"input"` - ["C3TIE2"],
-- `"limit"` - 100,
-- `"offset"` - 0
-  }
-  
-  response = run_graphql_query(
-  template_query,
-  variables,
-  config_file
-  )
+```python
+    template_path = "./examples/example_query.graphql"
+
+    template_query = get_graphql_template(template_path)
+
+    config_file = "./examples/config.examples.json"
+
+    check_graphql_config(config_file)
+
+    variables = {
+        "input": ["C3TIE2"],
+        "limit": 100,
+        "offset": 0
+    }
+
+    response = run_graphql_query(
+        template_query,
+        variables,
+        config_file
+        )
+```
   
 
 **Arguments**:
@@ -145,32 +148,33 @@ If any fields do exceed the limit a warning message is logged.
 
 **Example**:
 
-  
-  template_path = "./examples/example_query.graphql"
-  
-  template_query = get_graphql_template(template_path)
-  
-  config_file = "./examples/config.examples.json"
-  
-  check_graphql_config(config_file)
-  
-  variables = {
-- `"input"` - ["C3TIE2"],
-- `"limit"` - 100,
-- `"offset"` - 0
-  }
-  
-  response = run_graphql_query(
-  template_query,
-  variables,
-  config_file
-  )
-  
-  limit = 100
-  
-  json_data = json.loads(response.text)
-  
-  check_graphql_json(json_data, limit)
+```python
+    template_path = "./examples/example_query.graphql"
+
+    template_query = get_graphql_template(template_path)
+
+    config_file = "./examples/config.examples.json"
+
+    check_graphql_config(config_file)
+
+    variables = {
+        "input": ["C3TIE2"],
+        "limit": 100,
+        "offset": 0
+    }
+
+    response = run_graphql_query(
+        template_query,
+        variables,
+        config_file
+        )
+
+    limit = 100
+
+    json_data = json.loads(response.text)
+
+    check_graphql_json(json_data, limit)
+```
   
 
 **Arguments**:
@@ -200,36 +204,37 @@ so that they can be converted into a pandas dataframe.
 
 **Example**:
 
-  
-  template_path = "./examples/example_query.graphql"
-  
-  template_query = get_graphql_template(template_path)
-  
-  config_file = "./examples/config.examples.json"
-  
-  check_graphql_config(config_file)
-  
-  variables = {
-- `"input"` - ["C3TIE2"],
-- `"limit"` - 100,
-- `"offset"` - 0
-  }
-  
-  response = run_graphql_query(
-  template_query,
-  variables,
-  config_file
-  )
-  
-  limit = 100
-  
-  json_data = json.loads(response.text)
-  
-  check_graphql_json(json_data, limit)
-  
-  results_list = flatten_json(json_data)
-  
-  df = pd.DataFrame(results_list)
+```python
+    template_path = "./examples/example_query.graphql"
+
+    template_query = get_graphql_template(template_path)
+
+    config_file = "./examples/config.examples.json"
+
+    check_graphql_config(config_file)
+
+    variables = {
+        "input": ["C3TIE2"],
+        "limit": 100,
+        "offset": 0
+    }
+
+    response = run_graphql_query(
+        template_query,
+        variables,
+        config_file
+        )
+
+    limit = 100
+
+    json_data = json.loads(response.text)
+
+    check_graphql_json(json_data, limit)
+
+    results_list = flatten_json(json_data)
+
+    df = pd.DataFrame(results_list)
+```
   
 
 **Raises**:
@@ -254,36 +259,37 @@ that looks like a sequence based on its keys and values.
 
 **Example**:
 
-  
-  template_path = "./examples/example_query.graphql"
-  
-  template_query = get_graphql_template(template_path)
-  
-  config_file = "./examples/config.examples.json"
-  
-  check_graphql_config(config_file)
-  
-  variables = {
-- `"input"` - ["C3TIE2"],
-- `"limit"` - 100,
-- `"offset"` - 0
-  }
-  
-  response = run_graphql_query(
-  template_query,
-  variables,
-  config_file
-  )
-  
-  limit = 100
-  
-  json_data = json.loads(response.text)
-  
-  check_graphql_json(json_data, limit)
-  
-  results_list = flatten_json(json_data)
-  
-  sequence_list = extract_sequences_from_result_list(results_list)
+```python
+    template_path = "./examples/example_query.graphql"
+
+    template_query = get_graphql_template(template_path)
+
+    config_file = "./examples/config.examples.json"
+
+    check_graphql_config(config_file)
+
+    variables = {
+        "input": ["C3TIE2"],
+        "limit": 100,
+        "offset": 0
+    }
+
+    response = run_graphql_query(
+        template_query,
+        variables,
+        config_file
+        )
+
+    limit = 100
+
+    json_data = json.loads(response.text)
+
+    check_graphql_json(json_data, limit)
+
+    results_list = flatten_json(json_data)
+
+    sequence_list = extract_sequences_from_result_list(results_list)
+```
   
 
 **Arguments**:
