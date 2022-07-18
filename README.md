@@ -26,9 +26,12 @@ will log an error message and cause the script to error.
 
 **Example**:
 
+  
   N.B. This example will not validate but demonstrates the template needed for
   a configuration file.
+  
   config_file = "./examples/config.examples.json"
+  
   check_graphql_config(config_file)
   
 
@@ -48,7 +51,9 @@ as a string.
 
 **Example**:
 
+  
   template_path = "./examples/example_query.graphql"
+  
   template_query = get_graphql_template(template_path)
   
 
@@ -72,15 +77,21 @@ run_graphql_query _summary_
 
 **Example**:
 
+  
   template_path = "./examples/example_query.graphql"
+  
   template_query = get_graphql_template(template_path)
+  
   config_file = "./examples/config.examples.json"
+  
   check_graphql_config(config_file)
+  
   variables = {
 - `"input"` - ["C3TIE2"],
 - `"limit"` - 100,
 - `"offset"` - 0
   }
+  
   response = run_graphql_query(
   template_query,
   variables,
@@ -134,22 +145,31 @@ If any fields do exceed the limit a warning message is logged.
 
 **Example**:
 
+  
   template_path = "./examples/example_query.graphql"
+  
   template_query = get_graphql_template(template_path)
+  
   config_file = "./examples/config.examples.json"
+  
   check_graphql_config(config_file)
+  
   variables = {
 - `"input"` - ["C3TIE2"],
 - `"limit"` - 100,
 - `"offset"` - 0
   }
+  
   response = run_graphql_query(
   template_query,
   variables,
   config_file
   )
+  
   limit = 100
+  
   json_data = json.loads(response.text)
+  
   check_graphql_json(json_data, limit)
   
 
@@ -173,31 +193,42 @@ so that they can be converted into a pandas dataframe.
 
 **Arguments**:
 
-- `data` _dict_ - _description_
+- `data` _dict_ - A nested dictionary returned from a Ceres.
 - `parent_result_list` _list, optional_ - Used recursively - do not use. Defaults to None.
 - `parent_key` _str, optional_ - Used recursively - do not use. Defaults to None.
   
 
 **Example**:
 
+  
   template_path = "./examples/example_query.graphql"
+  
   template_query = get_graphql_template(template_path)
+  
   config_file = "./examples/config.examples.json"
+  
   check_graphql_config(config_file)
+  
   variables = {
 - `"input"` - ["C3TIE2"],
 - `"limit"` - 100,
 - `"offset"` - 0
   }
+  
   response = run_graphql_query(
   template_query,
   variables,
   config_file
   )
+  
   limit = 100
+  
   json_data = json.loads(response.text)
+  
   check_graphql_json(json_data, limit)
+  
   results_list = flatten_json(json_data)
+  
   df = pd.DataFrame(results_list)
   
 
@@ -223,24 +254,35 @@ that looks like a sequence based on its keys and values.
 
 **Example**:
 
+  
   template_path = "./examples/example_query.graphql"
+  
   template_query = get_graphql_template(template_path)
+  
   config_file = "./examples/config.examples.json"
+  
   check_graphql_config(config_file)
+  
   variables = {
 - `"input"` - ["C3TIE2"],
 - `"limit"` - 100,
 - `"offset"` - 0
   }
+  
   response = run_graphql_query(
   template_query,
   variables,
   config_file
   )
+  
   limit = 100
+  
   json_data = json.loads(response.text)
+  
   check_graphql_json(json_data, limit)
+  
   results_list = flatten_json(json_data)
+  
   sequence_list = extract_sequences_from_result_list(results_list)
   
 
