@@ -21,12 +21,14 @@ def check_graphql_config(config_file):
     will log an error message and cause the script to error.
 
     Example:
-    N.B. This example will not validate but demonstrates the template needed for 
-    a configuration file.
-        config_file = "./examples/config.examples.json"
-        check_graphql_config(config_file)
+    ```python
+# N.B. This example will not validate but demonstrates the template needed for 
+# a configuration file.
+config_file = "./examples/config.examples.json"
+check_graphql_config(config_file)
+    ```
 
-    Args:
+    Args:...
         config_file (str): The path to the configuration file
     """
     logger.info("Checking that Graphql configuration is valid")
@@ -51,8 +53,10 @@ def get_graphql_template(query):
     as a string.
 
     Example:
-        template_path = "./examples/example_query.graphql"
-        template_query = get_graphql_template(template_path)
+    ```python
+query = "./examples/example_query.graphql"
+template_query = get_graphql_template(query)
+    ```
 
     Args:
         query (str): Path to a file containing a graphql query 
@@ -68,23 +72,28 @@ def get_graphql_template(query):
 
 
 def run_graphql_query(query, variables, config_file):
-    """run_graphql_query _summary_
+    """run_graphql_query Sumbits the GraphQL query to the Ceres
+    endpoint and returns a request.Response() object.
 
     Example:
-        template_path = "./examples/example_query.graphql"
-        template_query = get_graphql_template(template_path)
-        config_file = "./examples/config.examples.json"
-        check_graphql_config(config_file)
-        variables = {
-            "input": ["C3TIE2"],
-            "limit": 100,
-            "offset": 0
-        }
-        response = run_graphql_query(
-            template_query,
-            variables,
-            config_file
-            )
+    ```python
+template_path = "./examples/example_query.graphql"
+template_query = get_graphql_template(template_path)
+config_file = "./examples/config.examples.json"
+check_graphql_config(config_file)
+
+variables = {
+    "input": ["C3TIE2"],
+    "limit": 100,
+    "offset": 0
+}
+
+response = run_graphql_query(
+    template_query,
+    variables,
+    config_file
+    )
+    ```
 
     Args:
         query (str): A string containing a graphql queries
@@ -147,23 +156,25 @@ def check_graphql_json(json_data, limit):
     If any fields do exceed the limit a warning message is logged.
 
     Example:
-        template_path = "./examples/example_query.graphql"
-        template_query = get_graphql_template(template_path)
-        config_file = "./examples/config.examples.json"
-        check_graphql_config(config_file)
-        variables = {
-            "input": ["C3TIE2"],
-            "limit": 100,
-            "offset": 0
-        }
-        response = run_graphql_query(
-            template_query,
-            variables,
-            config_file
-            )
-        limit = 100
-        json_data = json.loads(response.text)
-        check_graphql_json(json_data, limit)
+    ```python
+template_path = "./examples/example_query.graphql"
+template_query = get_graphql_template(template_path)
+config_file = "./examples/config.examples.json"
+check_graphql_config(config_file)
+variables = {
+    "input": ["C3TIE2"],
+    "limit": 100,
+    "offset": 0
+}
+response = run_graphql_query(
+    template_query,
+    variables,
+    config_file
+    )
+limit = 100
+json_data = json.loads(response.text)
+check_graphql_json(json_data, limit)
+    ```
 
     Args:
         json_data (dict): A nested dictionary containing the json-like results
@@ -195,30 +206,32 @@ def flatten_json(data, parent_result_list=None, parent_key=None):
     so that they can be converted into a pandas dataframe.
 
     Args:
-        data (dict): _description_
+        data (dict): A nested dictionary returned from a Ceres.
         parent_result_list (list, optional): Used recursively - do not use. Defaults to None.
         parent_key (str, optional): Used recursively - do not use. Defaults to None.
 
     Example:
-        template_path = "./examples/example_query.graphql"
-        template_query = get_graphql_template(template_path)
-        config_file = "./examples/config.examples.json"
-        check_graphql_config(config_file)
-        variables = {
-            "input": ["C3TIE2"],
-            "limit": 100,
-            "offset": 0
-        }
-        response = run_graphql_query(
-            template_query,
-            variables,
-            config_file
-            )
-        limit = 100
-        json_data = json.loads(response.text)
-        check_graphql_json(json_data, limit)
-        results_list = flatten_json(json_data)
-        df = pd.DataFrame(results_list)
+    ```python
+template_path = "./examples/example_query.graphql"
+template_query = get_graphql_template(template_path)
+config_file = "./examples/config.examples.json"
+check_graphql_config(config_file)
+variables = {
+    "input": ["C3TIE2"],
+    "limit": 100,
+    "offset": 0
+}
+response = run_graphql_query(
+    template_query,
+    variables,
+    config_file
+    )
+limit = 100
+json_data = json.loads(response.text)
+check_graphql_json(json_data, limit)
+results_list = flatten_json(json_data)
+df = pd.DataFrame(results_list)
+    ```
 
     Raises:
         Exception: If the input type is not a dictionary
@@ -271,25 +284,27 @@ def extract_sequences_from_result_list(result_list):
     that looks like a sequence based on its keys and values.
 
     Example:
-        template_path = "./examples/example_query.graphql"
-        template_query = get_graphql_template(template_path)
-        config_file = "./examples/config.examples.json"
-        check_graphql_config(config_file)
-        variables = {
-            "input": ["C3TIE2"],
-            "limit": 100,
-            "offset": 0
-        }
-        response = run_graphql_query(
-            template_query,
-            variables,
-            config_file
-            )
-        limit = 100
-        json_data = json.loads(response.text)
-        check_graphql_json(json_data, limit)
-        results_list = flatten_json(json_data)
-        sequence_list = extract_sequences_from_result_list(results_list)
+    ```python
+template_path = "./examples/example_query.graphql"
+template_query = get_graphql_template(template_path)
+config_file = "./examples/config.examples.json"
+check_graphql_config(config_file)
+variables = {
+    "input": ["C3TIE2"],
+    "limit": 100,
+    "offset": 0
+}
+response = run_graphql_query(
+    template_query,
+    variables,
+    config_file
+    )
+limit = 100
+json_data = json.loads(response.text)
+check_graphql_json(json_data, limit)
+results_list = flatten_json(json_data)
+sequence_list = extract_sequences_from_result_list(results_list)
+    ```
 
     Args:
         result_list (list): A list of dictionaries produced by flatten_json().
