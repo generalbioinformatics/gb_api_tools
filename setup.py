@@ -1,9 +1,10 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='gb_api_tools',
     version='0.0.1',
     python_requires='>=3.6',
+    packages=find_packages(include=["gb_api_tools", "gb_api_tools.*"]),
     author_email='michael.way@generalbioinformatics.com',
     license_files = ('LICENSE.txt'),
     install_requires=[
