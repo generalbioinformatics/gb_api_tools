@@ -1,6 +1,14 @@
 
 # Example
 
+## Installation
+
+Install with `pip` using the command below. You will need a python version greater than 3.6.
+
+```bash
+python -m pip install git+https://github.com/generalbioinformatics/gb_api_tools
+
+```
 
 ## Create a `config.json`
 
