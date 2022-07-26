@@ -17,6 +17,10 @@ For example, modify the example file `./examples/example_query.graphql` with you
 
 ## Test your setup
 
+To run this test you will need to create two local files. You can copy the files linked below and modify as appropriate:
+- [config.examples.json](https://github.com/generalbioinformatics/gb_api_tools/blob/master/examples/config.examples.json)
+- [example_query.graphql](https://github.com/generalbioinformatics/gb_api_tools/blob/master/examples/example_query.graphql)
+
 ```python
 
 from gb_api_tools.ceres_tools import check_graphql_config, get_graphql_template, run_graphql_query, check_graphql_json, flatten_json
@@ -44,5 +48,12 @@ check_graphql_json(json_data, limit)
 results_list = flatten_json(json_data)
 df = pd.DataFrame(results_list)
 print(df)
-
 ```
+
+This script should print the table below:
+
++----+---------------------------------------+---------------------------------------------+--------------------------+---------------------------+--------------------------+
+|    | data.proteins.id                      | data.proteins.pref_name                     | data.proteins.alt_name   | data.proteins.gene_name   | data.proteins.synonyms   |
++====+=======================================+=============================================+==========================+===========================+==========================+
+|  0 | http://identifiers.org/uniprot/C3TIE2 | Phospho-2-dehydro-3-deoxyheptonate aldolase |                          | aroG                      | aroG_2                   |
++----+---------------------------------------+---------------------------------------------+--------------------------+---------------------------+--------------------------+
