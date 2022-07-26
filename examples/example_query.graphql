@@ -1,9 +1,9 @@
 query ExampleQuery($input: [String], $limit: Int!, $offset: Int!){
-proteins(limit: $limit, offset: $offset) {
+proteins(ids: $input, limit: $limit, offset: $offset) {
     id
     pref_name
     alt_name
     gene_name
     synonyms
-}
+    }
 }
