@@ -5,6 +5,7 @@ import sys
 from datetime import datetime
 
 import requests
+from requests.adapters import HTTPAdapter, Retry
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
@@ -108,8 +109,13 @@ response = run_graphql_query(
         config = json.load(json_file)
     headers = {"authorization": "Bearer {}".format(config["token"])}
     logger.debug(query)
+    session = requests.Session()
+    retries = Retry(total=5,
+                    backoff_factor=0.1,
+                    status_forcelist=[ 500, 502, 503, 504 ])
+    session.mount('http://', HTTPAdapter(max_retries=retries))
     try:
-        response = requests.post(
+        response = session.post(
             config["graphql"],
             json={"query": query, "variables": variables},
             headers=headers,
