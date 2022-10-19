@@ -5,9 +5,11 @@ import sys
 from datetime import datetime
 
 import requests
-from requests.adapters import HTTPAdapter, Retry
+from backoff import expo, on_exception
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
+from ratelimit import RateLimitException, limits
+from requests.adapters import HTTPAdapter, Retry
 
 DATE = datetime.now()
 FORMAT = "%(asctime)s %(levelname)s %(message)s"
@@ -17,20 +19,20 @@ logger = logging.getLogger(__name__)
 
 def check_graphql_config(config_file):
     """check_graphql_config tests whether the URL and Java-Web-Token (JWT)
-    combination provided in the configuration file are able to generate
-    a succesful API response. If these credentials are invalid this script
-    will log an error message and cause the script to error.
+        combination provided in the configuration file are able to generate
+        a succesful API response. If these credentials are invalid this script
+        will log an error message and cause the script to error.
 
-    Example:
-    ```python
-# N.B. This example will not validate but demonstrates the template needed for 
-# a configuration file.
-config_file = "./examples/config.examples.json"
-check_graphql_config(config_file)
-    ```
+        Example:
+        ```python
+    # N.B. This example will not validate but demonstrates the template needed for
+    # a configuration file.
+    config_file = "./examples/config.examples.json"
+    check_graphql_config(config_file)
+        ```
 
-    Args:...
-        config_file (str): The path to the configuration file
+        Args:...
+            config_file (str): The path to the configuration file
     """
     logger.info("Checking that Graphql configuration is valid")
     with open(config_file) as json_file:
@@ -51,19 +53,19 @@ check_graphql_config(config_file)
 
 def get_graphql_template(query):
     """get_graphql_template Reads a file and returns the contents
-    as a string.
+        as a string.
 
-    Example:
-    ```python
-query = "./examples/example_query.graphql"
-template_query = get_graphql_template(query)
-    ```
+        Example:
+        ```python
+    query = "./examples/example_query.graphql"
+    template_query = get_graphql_template(query)
+        ```
 
-    Args:
-        query (str): Path to a file containing a graphql query 
+        Args:
+            query (str): Path to a file containing a graphql query
 
-    Returns:
-        str: A string containing the template graphql query
+        Returns:
+            str: A string containing the template graphql query
     """
     file_path = os.path.dirname(os.path.abspath(query))
     file_name = os.path.basename(query)
@@ -72,48 +74,48 @@ template_query = get_graphql_template(query)
     return query_template
 
 
+@on_exception(expo, RateLimitException, max_time=60)
+@limits(calls=64, period=60)
 def run_graphql_query(query, variables, config_file):
     """run_graphql_query Sumbits the GraphQL query to the Ceres
-    endpoint and returns a request.Response() object.
+        endpoint and returns a request.Response() object.
 
-    Example:
-    ```python
-template_path = "./examples/example_query.graphql"
-template_query = get_graphql_template(template_path)
-config_file = "./examples/config.examples.json"
-check_graphql_config(config_file)
+        Example:
+        ```python
+    template_path = "./examples/example_query.graphql"
+    template_query = get_graphql_template(template_path)
+    config_file = "./examples/config.examples.json"
+    check_graphql_config(config_file)
 
-variables = {
-    "input": ["C3TIE2"],
-    "limit": 100,
-    "offset": 0
-}
+    variables = {
+        "input": ["C3TIE2"],
+        "limit": 100,
+        "offset": 0
+    }
 
-response = run_graphql_query(
-    template_query,
-    variables,
-    config_file
-    )
-    ```
+    response = run_graphql_query(
+        template_query,
+        variables,
+        config_file
+        )
+        ```
 
-    Args:
-        query (str): A string containing a graphql queries
-        variables (dict): A dictionary containing any variables required by
-        the graphql query
-        config_file (str): The filepath of the config file
+        Args:
+            query (str): A string containing a graphql queries
+            variables (dict): A dictionary containing any variables required by
+            the graphql query
+            config_file (str): The filepath of the config file
 
-    Returns:
-        requests.Response(): A requests.Response() object.
+        Returns:
+            requests.Response(): A requests.Response() object.
     """
     with open(config_file) as json_file:
         config = json.load(json_file)
     headers = {"authorization": "Bearer {}".format(config["token"])}
     logger.debug(query)
     session = requests.Session()
-    retries = Retry(total=5,
-                    backoff_factor=0.1,
-                    status_forcelist=[ 500, 502, 503, 504 ])
-    session.mount('http://', HTTPAdapter(max_retries=retries))
+    retries = Retry(total=5, backoff_factor=0.1, status_forcelist=[500, 502, 503, 504])
+    session.mount("http://", HTTPAdapter(max_retries=retries))
     try:
         response = session.post(
             config["graphql"],
@@ -135,7 +137,7 @@ response = run_graphql_query(
 
 
 def recursive_key_count(data):
-    """recursive_key_count Recursively yields the length of all 
+    """recursive_key_count Recursively yields the length of all
     lists in a nested dictionary type structure. Used for checking
     that the length of lists does not exceed the predefined limit.
 
@@ -158,35 +160,35 @@ def recursive_key_count(data):
 
 def check_graphql_json(json_data, limit):
     """check_graphql_json Checks whether any fields within
-    a nested dictionary type structure exceed a specified limit.
-    If any fields do exceed the limit a warning message is logged.
+        a nested dictionary type structure exceed a specified limit.
+        If any fields do exceed the limit a warning message is logged.
 
-    Example:
-    ```python
-template_path = "./examples/example_query.graphql"
-template_query = get_graphql_template(template_path)
-config_file = "./examples/config.examples.json"
-check_graphql_config(config_file)
-variables = {
-    "input": ["C3TIE2"],
-    "limit": 100,
-    "offset": 0
-}
-response = run_graphql_query(
-    template_query,
-    variables,
-    config_file
-    )
-limit = 100
-json_data = json.loads(response.text)
-check_graphql_json(json_data, limit)
-    ```
+        Example:
+        ```python
+    template_path = "./examples/example_query.graphql"
+    template_query = get_graphql_template(template_path)
+    config_file = "./examples/config.examples.json"
+    check_graphql_config(config_file)
+    variables = {
+        "input": ["C3TIE2"],
+        "limit": 100,
+        "offset": 0
+    }
+    response = run_graphql_query(
+        template_query,
+        variables,
+        config_file
+        )
+    limit = 100
+    json_data = json.loads(response.text)
+    check_graphql_json(json_data, limit)
+        ```
 
-    Args:
-        json_data (dict): A nested dictionary containing the json-like results
-        from a graphql query.
-        limit (int): The expected maximum number of fields expected
-        in a nested dictionary values field.
+        Args:
+            json_data (dict): A nested dictionary containing the json-like results
+            from a graphql query.
+            limit (int): The expected maximum number of fields expected
+            in a nested dictionary values field.
     """
     counter = 0
     error_fields = set()
@@ -208,42 +210,42 @@ want to consider increasing the upper limit to a higher value".format(
 
 def flatten_json(data, parent_result_list=None, parent_key=None):
     """flatten_json returns a list of dictionaries. This function will recursively
-    search through a nested dictionary object flattening out the results
-    so that they can be converted into a pandas dataframe.
+        search through a nested dictionary object flattening out the results
+        so that they can be converted into a pandas dataframe.
 
-    Args:
-        data (dict): A nested dictionary returned from a Ceres.
-        parent_result_list (list, optional): Used recursively - do not use. Defaults to None.
-        parent_key (str, optional): Used recursively - do not use. Defaults to None.
+        Args:
+            data (dict): A nested dictionary returned from a Ceres.
+            parent_result_list (list, optional): Used recursively - do not use. Defaults to None.
+            parent_key (str, optional): Used recursively - do not use. Defaults to None.
 
-    Example:
-    ```python
-template_path = "./examples/example_query.graphql"
-template_query = get_graphql_template(template_path)
-config_file = "./examples/config.examples.json"
-check_graphql_config(config_file)
-variables = {
-    "input": ["C3TIE2"],
-    "limit": 100,
-    "offset": 0
-}
-response = run_graphql_query(
-    template_query,
-    variables,
-    config_file
-    )
-limit = 100
-json_data = json.loads(response.text)
-check_graphql_json(json_data, limit)
-results_list = flatten_json(json_data)
-df = pd.DataFrame(results_list)
-    ```
+        Example:
+        ```python
+    template_path = "./examples/example_query.graphql"
+    template_query = get_graphql_template(template_path)
+    config_file = "./examples/config.examples.json"
+    check_graphql_config(config_file)
+    variables = {
+        "input": ["C3TIE2"],
+        "limit": 100,
+        "offset": 0
+    }
+    response = run_graphql_query(
+        template_query,
+        variables,
+        config_file
+        )
+    limit = 100
+    json_data = json.loads(response.text)
+    check_graphql_json(json_data, limit)
+    results_list = flatten_json(json_data)
+    df = pd.DataFrame(results_list)
+        ```
 
-    Raises:
-        Exception: If the input type is not a dictionary
+        Raises:
+            Exception: If the input type is not a dictionary
 
-    Returns:
-        list: A list of dictionaries containing flattened data.
+        Returns:
+            list: A list of dictionaries containing flattened data.
     """
     if not isinstance(data, dict):
         raise Exception(
@@ -286,37 +288,37 @@ df = pd.DataFrame(results_list)
 
 def extract_sequences_from_result_list(result_list):
     """extract_sequences_from_result_list returns a list of SeqRecord objects.
-    Parses the results list produced by flatten_json() and searches for anything
-    that looks like a sequence based on its keys and values.
+        Parses the results list produced by flatten_json() and searches for anything
+        that looks like a sequence based on its keys and values.
 
-    Example:
-    ```python
-template_path = "./examples/example_query.graphql"
-template_query = get_graphql_template(template_path)
-config_file = "./examples/config.examples.json"
-check_graphql_config(config_file)
-variables = {
-    "input": ["C3TIE2"],
-    "limit": 100,
-    "offset": 0
-}
-response = run_graphql_query(
-    template_query,
-    variables,
-    config_file
-    )
-limit = 100
-json_data = json.loads(response.text)
-check_graphql_json(json_data, limit)
-results_list = flatten_json(json_data)
-sequence_list = extract_sequences_from_result_list(results_list)
-    ```
+        Example:
+        ```python
+    template_path = "./examples/example_query.graphql"
+    template_query = get_graphql_template(template_path)
+    config_file = "./examples/config.examples.json"
+    check_graphql_config(config_file)
+    variables = {
+        "input": ["C3TIE2"],
+        "limit": 100,
+        "offset": 0
+    }
+    response = run_graphql_query(
+        template_query,
+        variables,
+        config_file
+        )
+    limit = 100
+    json_data = json.loads(response.text)
+    check_graphql_json(json_data, limit)
+    results_list = flatten_json(json_data)
+    sequence_list = extract_sequences_from_result_list(results_list)
+        ```
 
-    Args:
-        result_list (list): A list of dictionaries produced by flatten_json().
+        Args:
+            result_list (list): A list of dictionaries produced by flatten_json().
 
-    Returns:
-        list: A list of Bio.SeqRecord objects. 
+        Returns:
+            list: A list of Bio.SeqRecord objects.
     """
     all_seq_dict = {}
     for result in result_list:
@@ -347,4 +349,3 @@ sequence_list = extract_sequences_from_result_list(results_list)
         record = SeqRecord(Seq(value), id=key, description="")
         seq_output.append(record)
     return seq_output
-
