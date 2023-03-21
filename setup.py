@@ -11,7 +11,7 @@ setup(
         'pandas>=1.1.5',
         'requests>=2.26.0',
         'openpyxl>=3.0.0',
-        'biopython>=1.79',
+        'biopython>=1.78',
         'ratelimit',
         'backoff'
         ],
