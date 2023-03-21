@@ -8,7 +8,7 @@ setup(
     author_email='michael.way@generalbioinformatics.com',
     license_files = ('LICENSE.txt'),
     install_requires=[
-        'pandas==1.1.5',
+        'pandas>=1.1.5',
         'requests==2.26.0',
         'openpyxl==3.0.0',
         'biopython==1.79',
